@@ -137,8 +137,12 @@ function ContactForm() {
         <Select
           value={serviceValue}
           onValueChange={(value) => {
-            setServiceValue(value);
-            setValue('service', value, { shouldValidate: true, shouldDirty: true });
+            const selectedValue = value ?? "";
+            setServiceValue(selectedValue);
+            setValue("service", selectedValue, {
+              shouldValidate: true,
+              shouldDirty: true,
+            });
           }}
         >
           <SelectTrigger className={errors.service ? 'border-red-500' : ''}>
@@ -305,16 +309,16 @@ function ProposalForm() {
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-2">
           <Label htmlFor="proposal-team-size">Team Size</Label>
-        <Select
-          value={teamSizeValue}
-          onValueChange={(value) => {
-            setTeamSizeValue(value);
-            setValue('teamSize', value, { shouldValidate: true, shouldDirty: true });
-          }}
-        >
-          <SelectTrigger className={errors.teamSize ? 'border-red-500' : ''}>
-            <SelectValue placeholder="Select team size" />
-          </SelectTrigger>
+          <Select
+            value={teamSizeValue}
+            onValueChange={(value) => {
+              setTeamSizeValue(value);
+              setValue('teamSize', value, { shouldValidate: true, shouldDirty: true });
+            }}
+          >
+            <SelectTrigger className={errors.teamSize ? 'border-red-500' : ''}>
+              <SelectValue placeholder="Select team size" />
+            </SelectTrigger>
             <SelectContent>
               {TEAM_SIZE_OPTIONS.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
@@ -328,16 +332,16 @@ function ProposalForm() {
 
         <div className="space-y-2">
           <Label htmlFor="proposal-country">Country</Label>
-        <Select
-          value={countryValue}
-          onValueChange={(value) => {
-            setCountryValue(value);
-            setValue('country', value, { shouldValidate: true, shouldDirty: true });
-          }}
-        >
-          <SelectTrigger className={errors.country ? 'border-red-500' : ''}>
-            <SelectValue placeholder="Select country" />
-          </SelectTrigger>
+          <Select
+            value={countryValue}
+            onValueChange={(value) => {
+              setCountryValue(value);
+              setValue('country', value, { shouldValidate: true, shouldDirty: true });
+            }}
+          >
+            <SelectTrigger className={errors.country ? 'border-red-500' : ''}>
+              <SelectValue placeholder="Select country" />
+            </SelectTrigger>
             <SelectContent>
               {COUNTRY_OPTIONS.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
