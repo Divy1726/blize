@@ -339,9 +339,9 @@ export default function CareersPage() {
                     <Select
                       value={selectedPosition}
                       onValueChange={(value) => {
-                        const nextValue = value || '';
-                        setSelectedPosition(nextValue);
-                        setValue('position', nextValue, { shouldValidate: true, shouldDirty: true });
+                        const selectedValue = value ?? "";
+                        setSelectedPosition(selectedValue);
+                        setValue('position', selectedValue, { shouldValidate: true, shouldDirty: true });
                       }}
                     >
                       <SelectTrigger>

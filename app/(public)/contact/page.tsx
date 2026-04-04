@@ -312,8 +312,12 @@ function ProposalForm() {
           <Select
             value={teamSizeValue}
             onValueChange={(value) => {
-              setTeamSizeValue(value);
-              setValue('teamSize', value, { shouldValidate: true, shouldDirty: true });
+              const selectedValue = value ?? "";
+              setTeamSizeValue(selectedValue);
+              setValue("teamSize", selectedValue, {
+                shouldValidate: true,
+                shouldDirty: true,
+              });
             }}
           >
             <SelectTrigger className={errors.teamSize ? 'border-red-500' : ''}>
@@ -335,8 +339,12 @@ function ProposalForm() {
           <Select
             value={countryValue}
             onValueChange={(value) => {
-              setCountryValue(value);
-              setValue('country', value, { shouldValidate: true, shouldDirty: true });
+              const selectedValue = value ?? "";
+              setCountryValue(selectedValue);
+              setValue("country", selectedValue, {
+                shouldValidate: true,
+                shouldDirty: true,
+              });
             }}
           >
             <SelectTrigger className={errors.country ? 'border-red-500' : ''}>
@@ -359,8 +367,12 @@ function ProposalForm() {
         <Select
           value={serviceValue}
           onValueChange={(value) => {
-            setServiceValue(value);
-            setValue('service', value, { shouldValidate: true, shouldDirty: true });
+            const selectedValue = value ?? "";
+            setServiceValue(selectedValue);
+            setValue("service", selectedValue, {
+              shouldValidate: true,
+              shouldDirty: true,
+            });
           }}
         >
           <SelectTrigger className={errors.service ? 'border-red-500' : ''}>

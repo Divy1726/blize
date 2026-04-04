@@ -305,7 +305,13 @@ export default function AdminLeadsPage() {
               />
             </div>
             <div className="flex gap-4">
-              <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value || 'all')}>
+              <Select
+                value={statusFilter}
+                onValueChange={(value) => {
+                  const selectedValue = value ?? "";
+                  setStatusFilter(selectedValue || 'all');
+                }}
+              >
                 <SelectTrigger className="w-40">
                   <Filter className="h-4 w-4 mr-2" />
                   <SelectValue />
@@ -319,7 +325,13 @@ export default function AdminLeadsPage() {
                 </SelectContent>
               </Select>
 
-              <Select value={typeFilter} onValueChange={(value) => setTypeFilter(value || 'all')}>
+              <Select
+                value={typeFilter}
+                onValueChange={(value) => {
+                  const selectedValue = value ?? "";
+                  setTypeFilter(selectedValue || 'all');
+                }}
+              >
                 <SelectTrigger className="w-40">
                   <SelectValue placeholder="Type" />
                 </SelectTrigger>

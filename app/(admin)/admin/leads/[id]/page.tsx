@@ -199,7 +199,15 @@ export default function LeadDetailPage() {
             <h1 className="text-xl font-semibold text-[#0F172A]">Lead Details</h1>
           </div>
           <div className="flex items-center gap-3">
-            <Select value={lead.status} onValueChange={(value) => value && updateStatus(value as Lead['status'])}>
+            <Select
+              value={lead.status}
+              onValueChange={(value) => {
+                const selectedValue = (value ?? "") as Lead['status'] | "";
+                if (selectedValue) {
+                  updateStatus(selectedValue);
+                }
+              }}
+            >
               <SelectTrigger className="w-40">
                 <Badge variant="secondary" className={getStatusColor(lead.status)}>
                   {lead.status}
