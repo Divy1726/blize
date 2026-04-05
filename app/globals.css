@@ -125,15 +125,17 @@
   }
   .glass {
     background: linear-gradient(180deg, rgba(248, 251, 255, 0.84), rgba(239, 245, 252, 0.76));
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    /* Removed heavy backdrop blur for improved text clarity */
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
     border: 1px solid rgba(255, 255, 255, 0.56);
     box-shadow: 0 22px 70px -30px rgba(2, 6, 23, 0.24);
   }
   .glass-dark {
     background: linear-gradient(180deg, rgba(11, 18, 32, 0.82), rgba(11, 18, 32, 0.72));
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    /* Removed heavy backdrop blur for improved text clarity */
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 0 24px 70px -34px rgba(2, 6, 23, 0.75);
   }
@@ -289,7 +291,7 @@
     @apply mb-5 inline-flex rounded-full border border-white/60 bg-slate-950/[0.03] px-4 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-[#1557dd] shadow-[0_12px_30px_-22px_rgba(17,79,211,0.5)];
   }
   .premium-card {
-    @apply rounded-3xl border border-white/70 bg-white/82 backdrop-blur-sm transition-all duration-500;
+    @apply rounded-3xl border border-white/70 bg-white/90 transition-all duration-500;
     box-shadow:
       0 1px 0 rgba(255, 255, 255, 0.62) inset,
       0 24px 64px -30px rgba(2, 6, 23, 0.22);
@@ -303,7 +305,7 @@
     transform: translateY(-4px);
   }
   .premium-card-dark {
-    @apply rounded-3xl border border-white/10 bg-white/5 shadow-[0_24px_90px_-34px_rgba(2,6,23,0.8)] backdrop-blur-sm transition-all duration-500;
+    @apply rounded-3xl border border-white/10 bg-white/6 shadow-[0_24px_90px_-34px_rgba(2,6,23,0.8)] transition-all duration-500;
   }
   .premium-card-dark:hover {
     border-color: rgba(125, 211, 252, 0.22);
@@ -311,7 +313,7 @@
     transform: translateY(-4px);
   }
   .premium-panel {
-    @apply rounded-[2rem] border border-white/70 bg-white/80 shadow-[0_30px_100px_-44px_rgba(2,6,23,0.38)] backdrop-blur-xl;
+    @apply rounded-[2rem] border border-white/70 bg-white/95 shadow-[0_30px_100px_-44px_rgba(2,6,23,0.38)];
   }
   .premium-chip {
     @apply inline-flex items-center gap-2 rounded-full border border-slate-300/70 bg-white/82 px-3 py-1.5 text-sm font-medium text-slate-700 shadow-[0_12px_32px_-24px_rgba(2,6,23,0.34)];

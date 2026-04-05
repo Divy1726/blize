@@ -18,7 +18,7 @@ export function Footer() {
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
       {/* Main Footer */}
       <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
-        <div className="mb-12 rounded-[2rem] border border-white/10 bg-white/5 p-8 shadow-[0_24px_90px_-34px_rgba(2,6,23,0.9)] backdrop-blur-sm lg:p-10">
+        <div className="mb-12 rounded-[2rem] border border-white/10 bg-white/6 p-8 shadow-[0_24px_90px_-34px_rgba(2,6,23,0.9)] lg:p-10">
           <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
           {/* Brand Column */}
             <div className="lg:col-span-1">

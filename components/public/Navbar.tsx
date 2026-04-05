@@ -19,6 +19,7 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [mobileOpenDropdown, setMobileOpenDropdown] = useState<string | null>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -155,44 +156,69 @@ export function Navbar() {
             transition={{ duration: 0.3 }}
             className="mx-4 mt-3 overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-premium lg:hidden"
           >
-            <div className="space-y-2 px-4 py-6">
+              <div className="space-y-2 px-4 py-6">
               {NAVIGATION.public.map((item) => (
                 <div key={item.label}>
-                  <Link
-                    href={item.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={cn(
-                      'flex items-center rounded-2xl px-4 py-3 text-base font-medium transition-all',
-                      isActive(item.href)
-                        ? 'bg-[#175fe8]/6 text-[#175fe8]'
-                        : 'text-[#5c6b83] hover:bg-[#F1F5F9] hover:text-[#0F172A]'
-                    )}
-                  >
-                    {item.label}
-                  </Link>
-                  {hasChildren(item) && (
-                    <div className="ml-4 mt-2 space-y-1 border-l border-[#E2E8F0] pl-4">
-                      {item.children.map((child) => (
-                        <Link
-                          key={child.label}
-                          href={child.href}
-                          onClick={() => setIsMobileMenuOpen(false)}
-                          className={cn(
-                            'flex items-center rounded-xl px-4 py-2 text-sm transition-all',
-                            isActive(child.href)
-                              ? 'bg-[#175fe8]/6 text-[#175fe8]'
-                              : 'text-[#64748B] hover:bg-[#F1F5F9] hover:text-[#0F172A]'
-                          )}
-                        >
-                          {child.label}
-                        </Link>
-                      ))}
+                  {hasChildren(item) ? (
+                    <div>
+                      <button
+                        type="button"
+                        onClick={() => setMobileOpenDropdown(mobileOpenDropdown === item.label ? null : item.label)}
+                        className={cn(
+                          'w-full flex items-center justify-between rounded-2xl px-4 py-3 text-base font-medium transition-all',
+                          isActive(item.href)
+                            ? 'bg-[#175fe8]/6 text-[#175fe8]'
+                            : 'text-[#5c6b83] hover:bg-[#F1F5F9] hover:text-[#0F172A]'
+                        )}
+                      >
+                        <span>{item.label}</span>
+                        <ChevronDown className={cn('h-4 w-4 transition-transform', mobileOpenDropdown === item.label && 'rotate-180')} />
+                      </button>
+
+                      {mobileOpenDropdown === item.label && (
+                        <div className="ml-4 mt-2 space-y-1 border-l border-[#E2E8F0] pl-4">
+                          {item.children.map((child) => (
+                            <Link
+                              key={child.label}
+                              href={child.href}
+                              onClick={() => {
+                                setIsMobileMenuOpen(false);
+                                setMobileOpenDropdown(null);
+                              }}
+                              className={cn(
+                                'flex items-center rounded-xl px-4 py-2 text-sm transition-all',
+                                isActive(child.href)
+                                  ? 'bg-[#175fe8]/6 text-[#175fe8]'
+                                  : 'text-[#64748B] hover:bg-[#F1F5F9] hover:text-[#0F172A]'
+                              )}
+                            >
+                              {child.label}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
                     </div>
+                  ) : (
+                    <Link
+                      href={item.href}
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        setMobileOpenDropdown(null);
+                      }}
+                      className={cn(
+                        'flex items-center rounded-2xl px-4 py-3 text-base font-medium transition-all',
+                        isActive(item.href)
+                          ? 'bg-[#175fe8]/6 text-[#175fe8]'
+                          : 'text-[#5c6b83] hover:bg-[#F1F5F9] hover:text-[#0F172A]'
+                      )}
+                    >
+                      {item.label}
+                    </Link>
                   )}
                 </div>
               ))}
               <div className="pt-4">
-                <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)}>
+                <Link href="/contact" onClick={() => { setIsMobileMenuOpen(false); setMobileOpenDropdown(null); }}>
                   <Button className="btn-gradient w-full">
                     Get Started
                   </Button>
