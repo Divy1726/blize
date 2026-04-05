@@ -24,7 +24,10 @@ import {
   Building2,
   Leaf,
   Waves,
+  Loader2,
+  Send,
 } from 'lucide-react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -44,6 +47,17 @@ import {
 } from '@/lib/constants';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { SERVICE_OPTIONS, COUNTRY_OPTIONS } from '@/lib/constants';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { contactFormSchema, ContactFormSchema } from '@/lib/validators';
+import { toast } from 'sonner';
+import { createClient } from '@/lib/supabase/client';
+import { createLead } from '@/lib/admin/leads';
 
 // Icon mapping
 const iconMap: Record<string, React.ElementType> = {
@@ -68,25 +82,169 @@ function ServiceIcon({ icon }: { icon: string }) {
   return <IconComponent className="h-6 w-6" />;
 }
 
+function HeroInlineForm() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [serviceValue, setServiceValue] = useState('');
+  const supabase = createClient();
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+    reset,
+  } = useForm<ContactFormSchema>({
+    resolver: zodResolver(contactFormSchema),
+    defaultValues: { name: '', email: '', phone: '', company: '', service: '', message: '' },
+  });
+
+  const onSubmit = async (data: ContactFormSchema) => {
+    setIsSubmitting(true);
+    try {
+      const result = await createLead(supabase, {
+        name: data.name,
+        email: data.email,
+        phone: data.phone || '',
+        company: data.company || '',
+        service: data.service,
+        message: data.message,
+        source: 'home-hero',
+        type: 'contact',
+      });
+
+      if (!result.ok) {
+        toast.error(result.error);
+        return;
+      }
+
+      toast.success(
+        result.mode === 'supabase'
+          ? 'Inquiry submitted — visible in admin dashboard.'
+          : 'Inquiry saved locally (demo mode).'
+      );
+      reset();
+      setServiceValue('');
+    } catch (err) {
+      toast.error('Something went wrong. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 sm:grid-cols-2">
+      <div className="space-y-2">
+        <Label htmlFor="hero-name">Full Name</Label>
+        <Input
+          id="hero-name"
+          placeholder="Jane Cooper"
+          className="border-slate-200 bg-white shadow-none"
+          {...register('name')}
+        />
+        {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="hero-email">Work Email</Label>
+        <Input
+          id="hero-email"
+          type="email"
+          placeholder="jane@company.com"
+          className="border-slate-200 bg-white shadow-none"
+          {...register('email')}
+        />
+        {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="hero-phone">Phone Number</Label>
+        <Input
+          id="hero-phone"
+          placeholder="+91 98765 43210"
+          className="border-slate-200 bg-white shadow-none"
+          {...register('phone')}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="hero-company">Company / Firm</Label>
+        <Input
+          id="hero-company"
+          placeholder="Your Company"
+          className="border-slate-200 bg-white shadow-none"
+          {...register('company')}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label>Service Needed</Label>
+        <Select
+          value={serviceValue}
+          onValueChange={(value) => {
+            const val = value ?? '';
+            setServiceValue(val);
+            setValue('service', val, { shouldValidate: true, shouldDirty: true });
+          }}
+        >
+          <SelectTrigger className="h-12 w-full rounded-2xl border-slate-200 bg-white px-4 py-3 text-base shadow-none">
+            <SelectValue placeholder="Select a service" />
+          </SelectTrigger>
+          <SelectContent>
+            {SERVICE_OPTIONS.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {errors.service && <p className="text-sm text-red-500">{errors.service.message}</p>}
+      </div>
+
+      <div className="mt-4 sm:col-span-2 space-y-2">
+        <Label htmlFor="hero-message">Message / Requirements</Label>
+        <Textarea
+          id="hero-message"
+          placeholder="Tell us about your current workflow, monthly volume, and where your team needs support."
+          rows={4}
+          className="border-slate-200 bg-white shadow-none"
+          {...register('message')}
+        />
+        {errors.message && <p className="text-sm text-red-500">{errors.message.message}</p>}
+      </div>
+
+      <div className="mt-4 sm:col-span-2">
+        <Button type="submit" size="lg" disabled={isSubmitting} className="w-full btn-gradient">
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+              Sending...
+            </>
+          ) : (
+            <>
+              Submit Inquiry
+              <Send className="ml-2 h-5 w-5" />
+            </>
+          )}
+        </Button>
+      </div>
+    </form>
+  );
+}
+
 // Hero Section
 function HeroSection() {
   return (
     <section className="hero-shell">
       <div className="absolute inset-0 -z-10">
-        <div className="absolute left-[10%] top-14 h-[24rem] w-[24rem] rounded-full bg-blue-500/12 blur-[120px]" />
-        <div className="absolute right-[8%] top-24 h-[22rem] w-[22rem] rounded-full bg-cyan-400/12 blur-[120px]" />
-        <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.72),transparent_58%)]" />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(180deg,transparent,rgba(255,255,255,0.78))]" />
+        <div className="absolute left-[10%] top-14 h-[24rem] w-[24rem] rounded-full bg-[radial-gradient(circle,rgba(59,130,246,0.14)_0%,rgba(59,130,246,0.05)_45%,transparent_72%)]" />
+        <div className="absolute right-[8%] top-24 h-[22rem] w-[22rem] rounded-full bg-[radial-gradient(circle,rgba(34,211,238,0.14)_0%,rgba(34,211,238,0.05)_45%,transparent_72%)]" />
+        <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.82),transparent_58%)]" />
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(180deg,transparent,rgba(255,255,255,0.88))]" />
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-start gap-14 lg:grid-cols-[0.94fr_1.06fr] lg:gap-16">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="pt-6 lg:pt-14"
-          >
+          <div className="pt-6 lg:pt-14">
             <Badge className="eyebrow-badge">
               Trusted by 100+ Firms and Finance Teams
             </Badge>
@@ -113,7 +271,7 @@ function HeroSection() {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="border-slate-300 bg-white/70 px-8 text-base text-[#0F172A] shadow-[0_18px_40px_-30px_rgba(15,23,42,0.24)] backdrop-blur-sm"
+                  className="border-slate-300 bg-white px-8 text-base text-[#0F172A] shadow-[0_18px_40px_-30px_rgba(15,23,42,0.18)]"
                 >
                   Learn More
                 </Button>
@@ -147,18 +305,13 @@ function HeroSection() {
                 </div>
               ))}
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="relative lg:pt-4"
-          >
-            <div className="premium-panel relative overflow-hidden border border-white/80 bg-[linear-gradient(180deg,rgba(250,252,255,0.98),rgba(240,247,252,0.95))] p-6 sm:p-8">
+          <div className="relative lg:pt-4">
+            <div className="relative overflow-hidden rounded-[2rem] border border-slate-200 bg-[linear-gradient(180deg,#ffffff,#f8fbff)] p-6 shadow-[0_30px_100px_-44px_rgba(2,6,23,0.22)] sm:p-8">
               <div className="absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-blue-300/70 to-transparent" />
-              <div className="absolute right-0 top-0 h-44 w-44 rounded-full bg-blue-500/10 blur-3xl" />
-              <div className="absolute bottom-0 left-0 h-40 w-40 rounded-full bg-cyan-400/10 blur-3xl" />
+              <div className="absolute right-0 top-0 h-44 w-44 rounded-full bg-[radial-gradient(circle,rgba(59,130,246,0.10)_0%,transparent_70%)]" />
+              <div className="absolute bottom-0 left-0 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(34,211,238,0.10)_0%,transparent_70%)]" />
 
               <div className="relative">
                 <div className="mb-6">
@@ -173,49 +326,12 @@ function HeroSection() {
                   </p>
                 </div>
 
-                <div className="grid gap-4 sm:grid-cols-2">
-                  {[
-                    'Full Name',
-                    'Work Email',
-                    'Phone Number',
-                    'Company / Firm',
-                    'Country',
-                    'Service Needed',
-                  ].map((label, index) => (
-                    <div key={label} className={index > 3 ? 'sm:col-span-1' : ''}>
-                      <div className="mb-2 text-sm font-medium text-[#334155]">{label}</div>
-                      <div className="rounded-2xl border border-slate-200 bg-white/88 px-4 py-4 text-sm text-[#94A3B8] shadow-[0_16px_34px_-28px_rgba(15,23,42,0.2)]">
-                        {label === 'Full Name' && 'Jane Cooper'}
-                        {label === 'Work Email' && 'jane@company.com'}
-                        {label === 'Phone Number' && '+91 98765 43210'}
-                        {label === 'Company / Firm' && 'Your Company'}
-                        {label === 'Country' && 'United States'}
-                        {label === 'Service Needed' && 'Select a service'}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-4">
-                  <div className="mb-2 text-sm font-medium text-[#334155]">Message / Requirements</div>
-                  <div className="min-h-32 rounded-[1.6rem] border border-slate-200 bg-white/88 px-4 py-4 text-sm text-[#94A3B8] shadow-[0_16px_34px_-28px_rgba(15,23,42,0.2)]">
-                    Tell us about your current workflow, monthly volume, and where your team needs support.
-                  </div>
-                </div>
-
-                <div className="mt-6">
-                  <div className="rounded-2xl bg-gradient-to-r from-[#175fe8] to-[#08b7d8] px-6 py-4 text-center text-sm font-semibold text-white shadow-[0_22px_44px_-24px_rgba(23,95,232,0.56)]">
-                    Submit Inquiry
-                  </div>
-                </div>
+                {/* Hero quick inquiry form */}
+                <HeroInlineForm />
               </div>
             </div>
 
-            <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute -right-3 top-7 hidden rounded-3xl border border-white/85 bg-white/92 p-4 shadow-premium xl:block"
-            >
+            <div className="absolute -right-3 top-7 hidden rounded-3xl border border-slate-200 bg-white p-4 shadow-[0_18px_50px_-28px_rgba(15,23,42,0.16)] xl:block">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100">
                   <Clock className="h-5 w-5 text-[#175fe8]" />
@@ -225,8 +341,8 @@ function HeroSection() {
                   <div className="text-xs text-[#64748B]">Typical first reply</div>
                 </div>
               </div>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -780,8 +896,8 @@ function FinalCTASection() {
         <AnimatedSection>
           <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(37,99,235,0.24),transparent_28%),linear-gradient(135deg,#09111f_0%,#132033_58%,#1a2a42_100%)] p-8 text-center shadow-[0_36px_110px_-50px_rgba(2,6,23,0.95)] sm:p-12 lg:p-16">
             {/* Background decoration */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-500/20 rounded-full blur-3xl" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/20 rounded-full" />
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-500/20 rounded-full" />
             <div className="absolute inset-0 grid-sheen opacity-[0.08]" />
             
             <div className="relative z-10">

@@ -248,8 +248,7 @@
     pointer-events: none;
     background:
       radial-gradient(circle at 18% 10%, rgba(21, 87, 221, 0.16), transparent 28%),
-      radial-gradient(circle at 82% 28%, rgba(7, 169, 204, 0.13), transparent 24%),
-      linear-gradient(180deg, rgba(235, 242, 249, 0.88), rgba(255, 255, 255, 0));
+      radial-gradient(circle at 82% 28%, rgba(7, 169, 204, 0.13), transparent 24%);
   }
   .section-divider {
     @apply relative;
@@ -334,4 +333,16 @@
       radial-gradient(circle at top right, rgba(21, 87, 221, 0.2), transparent 28%),
       linear-gradient(180deg, #060d18 0%, #09111f 50%, #0d1726 100%);
   }
+}
+
+.premium-card {
+  @apply rounded-3xl border border-white/70 bg-white transition-all duration-500;
+}
+
+.premium-card-dark {
+  @apply rounded-3xl border border-white/10 bg-slate-900 transition-all duration-500;
+}
+
+.premium-panel {
+  @apply rounded-[2rem] border border-white/70 bg-white;
 }
