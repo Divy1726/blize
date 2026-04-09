@@ -154,7 +154,7 @@ export function Navbar() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="mx-4 mt-3 overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-premium lg:hidden"
+            className="mx-4 mt-3 overflow-y-auto max-h-[80vh] rounded-[2rem] border border-slate-200 bg-white shadow-premium lg:hidden"
           >
               <div className="space-y-2 px-4 py-6">
               {NAVIGATION.public.map((item) => (

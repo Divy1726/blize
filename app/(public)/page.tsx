@@ -245,10 +245,10 @@ function HeroSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-start gap-14 lg:grid-cols-[0.94fr_1.06fr] lg:gap-16">
           <div className="pt-6 lg:pt-14">
-            <Badge className="eyebrow-badge">
+            <Badge className="eyebrow-badge max-w-full whitespace-normal break-words px-3 py-2 text-center text-[10px] leading-relaxed sm:text-xs">
               Trusted by 100+ Firms and Finance Teams
             </Badge>
-            <h1 className="hero-title max-w-3xl text-[3.5rem] sm:text-6xl lg:text-[5.2rem]">
+            <h1 className="hero-title max-w-3xl text-4xl leading-[1.1] sm:text-5xl md:text-6xl lg:text-[5.2rem]">
               Premium Accounting
               <span className="block text-gradient">Outsourcing</span>
               Solutions
@@ -258,20 +258,20 @@ function HeroSection() {
               streamline reporting, bookkeeping, and finance operations without expanding in-house headcount.
             </p>
             <div className="mt-9 flex flex-col gap-4 sm:flex-row">
-              <Link href="/contact">
+              <Link href="/contact" className="w-full sm:w-auto">
                 <Button
                   size="lg"
-                  className="btn-gradient px-8 text-base"
+                  className="w-full sm:w-auto btn-gradient px-8 text-base"
                 >
                   Get Free Consultation
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
-              <Link href="/services">
+              <Link href="/services" className="w-full sm:w-auto">
                 <Button
                   variant="outline"
                   size="lg"
-                  className="border-slate-300 bg-white px-8 text-base text-[#0F172A] shadow-[0_18px_40px_-30px_rgba(15,23,42,0.18)]"
+                  className="w-full sm:w-auto border-slate-300 bg-white px-8 text-base text-[#0F172A] shadow-[0_18px_40px_-30px_rgba(15,23,42,0.18)]"
                 >
                   Learn More
                 </Button>
@@ -423,7 +423,7 @@ function WhyChooseUsSection() {
           </p>
         </AnimatedSection>
 
-        <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8">
           {reasons.map((reason) => (
             <StaggerItem key={reason.title}>
               <Card className="premium-card group h-full">
@@ -491,8 +491,8 @@ function ServicesSection() {
         </StaggerContainer>
 
         <div className="text-center mt-12">
-          <Link href="/services">
-            <Button variant="outline" size="lg" className="px-8">
+          <Link href="/services" className="w-full sm:w-auto inline-block">
+            <Button variant="outline" size="lg" className="w-full sm:w-auto px-8">
               View All Services
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
@@ -555,7 +555,7 @@ function HowWeWorkSection() {
               {index < steps.length - 1 && (
                 <div className="absolute left-[calc(100%-0.5rem)] top-8 hidden h-0.5 w-8 bg-gradient-to-r from-blue-500/50 to-transparent lg:block xl:w-12" />
               )}
-              
+
               <div className="premium-card-dark h-full p-6 text-center lg:text-left">
                 <div className="mb-5 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 text-xl font-bold text-white">
                   {step.number}
@@ -647,7 +647,7 @@ function StatsSection() {
   return (
     <section className="section-divider section-padding">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <StaggerContainer className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+        <StaggerContainer className="grid grid-cols-1 min-[400px]:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {STATS.map((stat) => (
             <StaggerItem key={stat.label}>
               <div className="premium-panel p-6 text-center">
@@ -681,7 +681,7 @@ function TrustSection() {
             <p className="text-lg text-[#64748B] mb-8">
               We understand that your financial data is sensitive. That&apos;s why we&apos;ve implemented comprehensive security measures to protect your information at every step.
             </p>
-            
+
             <div className="space-y-4">
               {[
                 'Bank-level 256-bit encryption for all data transfers',
@@ -700,8 +700,8 @@ function TrustSection() {
           </AnimatedSection>
 
           <AnimatedSection direction="right" className="relative">
-            <div className="bg-white rounded-2xl shadow-premium p-8 border border-[#E2E8F0]">
-              <div className="grid grid-cols-2 gap-6">
+            <div className="bg-white rounded-2xl shadow-premium p-5 sm:p-8 border border-[#E2E8F0]">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div className="text-center p-4 bg-[#F8FAFC] rounded-xl">
                   <div className="text-3xl font-bold text-[#0F172A] mb-1">99.9%</div>
                   <div className="text-sm text-[#64748B]">Uptime Guarantee</div>
@@ -794,11 +794,11 @@ function CaseStudiesSection() {
               Real Results for Real Clients
             </h2>
           </div>
-          <Link href="/case-studies">
+          <Link href="/case-studies" className="w-full sm:w-auto">
             <Button
               variant="outline"
               size="lg"
-              className="font-medium px-6 py-5 rounded-xl border-white/20 text-white hover:bg-white/10"
+              className="w-full sm:w-auto font-medium px-6 py-5 rounded-xl border-white/20 text-black hover:bg-white/30"
             >
               View All Cases
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -813,17 +813,17 @@ function CaseStudiesSection() {
                 <Card className="group h-full bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 cursor-pointer">
                   <CardContent className="p-6">
                     <div className="text-xs text-blue-400 mb-2">{study.industry}</div>
-                    <h3 className="text-xl font-semibold mb-4 group-hover:text-blue-400 transition-colors">
+                    <h3 className="text-xl font-semibold text-white mb-4 group-hover:text-blue-400 transition-colors">
                       {study.title}
                     </h3>
-                    <p className="text-[#94A3B8] text-sm mb-6 line-clamp-3">
+                    <p className="text-gray-300 text-sm mb-6 line-clamp-3">
                       {study.challenge}
                     </p>
                     <div className="space-y-2">
                       {study.results.slice(0, 2).map((result, idx) => (
                         <div key={idx} className="flex items-center gap-2 text-sm">
                           <CheckCircle className="h-4 w-4 text-emerald-400 flex-shrink-0" />
-                          <span className="text-[#E2E8F0]">{result}</span>
+                          <span className="text-white">{result}</span>
                         </div>
                       ))}
                     </div>
@@ -873,10 +873,10 @@ function FAQPreviewSection() {
         </AnimatedSection>
 
         <div className="text-center mt-8">
-          <Link href="/faq">
+          <Link href="/faq" className="w-full sm:w-auto inline-block">
             <Button
               variant="outline"
-              className="font-medium px-6 py-5 rounded-xl border-[#E2E8F0] hover:bg-white"
+              className="w-full sm:w-auto font-medium px-6 py-5 rounded-xl border-[#E2E8F0] hover:bg-white"
             >
               View All FAQs
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -894,12 +894,12 @@ function FinalCTASection() {
     <section className="section-padding">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <AnimatedSection>
-          <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(37,99,235,0.24),transparent_28%),linear-gradient(135deg,#09111f_0%,#132033_58%,#1a2a42_100%)] p-8 text-center shadow-[0_36px_110px_-50px_rgba(2,6,23,0.95)] sm:p-12 lg:p-16">
+          <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-[radial-gradient(circle_at_top_right,rgba(37,99,235,0.24),transparent_28%),linear-gradient(135deg,#09111f_0%,#132033_58%,#1a2a42_100%)] p-6 sm:p-12 lg:p-16 text-center shadow-[0_36px_110px_-50px_rgba(2,6,23,0.95)]">
             {/* Background decoration */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/20 rounded-full" />
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-500/20 rounded-full" />
             <div className="absolute inset-0 grid-sheen opacity-[0.08]" />
-            
+
             <div className="relative z-10">
               <h2 className="mb-6 text-3xl font-semibold tracking-[-0.05em] text-white sm:text-4xl lg:text-5xl">
                 Ready to Scale Your Practice?
@@ -908,20 +908,20 @@ function FinalCTASection() {
                 Join 100+ accounting firms that trust Blize Global to handle their financial operations. Get started with a free consultation.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/contact">
+                <Link href="/contact" className="w-full sm:w-auto">
                   <Button
                     size="lg"
-                    className="bg-white px-8 text-base text-[#0F172A] hover:bg-[#F1F5F9]"
+                    className="w-full sm:w-auto bg-white px-8 text-base text-[#0F172A] hover:bg-[#F1F5F9]"
                   >
                     Book a Consultation
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
-                <Link href="/contact?type=proposal">
+                <Link href="/contact?type=proposal" className="w-full sm:w-auto">
                   <Button
                     variant="outline"
                     size="lg"
-                    className="border-white/30 bg-white/[0.06] px-8 text-base text-white hover:bg-white/10"
+                    className="w-full sm:w-auto border-white/30 bg-white/[0.06] px-8 text-base text-white hover:bg-white/30"
                   >
                     Get a Proposal
                   </Button>
