@@ -55,7 +55,7 @@ export function Navbar() {
             <BrandLogo
               priority
               className="flex h-full shrink-0 items-center"
-              imageClassName="block w-[152px] -translate-y-[-3px] object-contain sm:w-[148px] lg:w-[190px] lg:-translate-y-[-9px]"
+              imageClassName="block w-[152px] -translate-y-[-3px] object-contain sm:w-[148px] lg:w-[140px] lg:-translate-y-[-12px]"
             />
           </motion.div>
 
