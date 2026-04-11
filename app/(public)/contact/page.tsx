@@ -71,11 +71,7 @@ function ContactForm() {
         return;
       }
 
-      toast.success(
-        result.mode === 'supabase'
-          ? 'Message sent successfully! Your details are now in the admin dashboard.'
-          : 'Message saved locally! It is visible in the admin dashboard demo mode.'
-      );
+      toast.success("Message sent! We'll get back to you within 24 hours.");
       reset();
       setServiceValue('');
     } catch {
@@ -241,11 +237,7 @@ function ProposalForm() {
         return;
       }
 
-      toast.success(
-        result.mode === 'supabase'
-          ? 'Proposal request submitted! It is now available in the admin dashboard.'
-          : 'Proposal saved locally! It is visible in the admin dashboard demo mode.'
-      );
+      toast.success('Proposal request received! Our team will contact you shortly.');
       reset();
       setTeamSizeValue('');
       setCountryValue('');

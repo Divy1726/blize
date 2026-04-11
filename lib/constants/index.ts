@@ -188,7 +188,7 @@ export const STATS = [
 export const TESTIMONIALS = [
   {
     id: '1',
-    name: 'Sarah Mitchell',
+    name: 'Raju Rastogi',
     role: 'Managing Partner',
     company: 'Mitchell & Associates CPA',
     content: 'Blize Global transformed our firm\'s capacity. Their team handles our overflow work with precision, allowing us to take on 40% more clients without adding permanent staff.',
@@ -196,7 +196,7 @@ export const TESTIMONIALS = [
   },
   {
     id: '2',
-    name: 'David Chen',
+    name: 'Sanjay Gupta',
     role: 'CEO',
     company: 'Northwood Financial Group',
     content: 'The outsourced CFO services have been transformative. We get executive-level insights at a fraction of the cost. Our financial decision-making has never been sharper.',
@@ -204,18 +204,18 @@ export const TESTIMONIALS = [
   },
   {
     id: '3',
-    name: 'Jennifer Walsh',
-    role: 'Practice Manager',
-    company: 'Walsh Tax Advisors',
-    content: 'During tax season, Blize Global\'s support is invaluable. They handle our bookkeeping overflow and ensure nothing falls through the cracks. Truly a strategic partner.',
+    name: 'Samay Raina',
+    role: 'Founder',
+    company: 'Indias got latent',
+    content: 'During tax season, Blize Global\'s support is invaluable. They handle our bookkeeping overflow and ensure nothing falls through the cracks. Truly a strategic partner. such a great team to work with.',
     rating: 5,
   },
   {
     id: '4',
-    name: 'Michael Torres',
+    name: 'Nithin Kamath',
     role: 'Founder',
-    company: 'GrowthStage Accounting',
-    content: 'As a startup firm, we needed flexibility. Blize Global scaled with us from 5 to 50 clients seamlessly. Their team feels like an extension of our own.',
+    company: 'Zerodha',
+    content: 'Blize Global has been a game-changer for our firm. Their team handles our overflow work with precision, allowing us to take on 40% more clients without adding permanent staff.',
     rating: 5,
   },
 ] as const;

@@ -117,11 +117,7 @@ function HeroInlineForm() {
         return;
       }
 
-      toast.success(
-        result.mode === 'supabase'
-          ? 'Inquiry submitted — visible in admin dashboard.'
-          : 'Inquiry saved locally (demo mode).'
-      );
+      toast.success("Thank you! We'll be in touch within 24 hours.");
       reset();
       setServiceValue('');
     } catch (err) {
@@ -652,7 +648,7 @@ function StatsSection() {
             <StaggerItem key={stat.label}>
               <div className="premium-panel p-6 text-center">
                 <div className="text-4xl sm:text-5xl font-bold text-gradient mb-2">
-                  <AnimatedCounter value={stat.value} suffix={stat.suffix} />
+                  {stat.value}{stat.suffix}
                 </div>
                 <div className="text-lg font-semibold text-[#0F172A] mb-1">{stat.label}</div>
                 <div className="text-sm text-[#64748B]">{stat.description}</div>

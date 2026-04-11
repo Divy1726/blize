@@ -11,7 +11,6 @@ import {
   Eye,
   Trash2,
   CheckCircle,
-  DatabaseZap,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -37,13 +36,11 @@ import { toast } from 'sonner';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Lead } from '@/types';
 import {
-  DEMO_STORAGE_KEY,
   getLeadDisplayName,
   getLeadInitials,
   loadLeads,
   removeLead,
   saveLeadStatus,
-  type LeadsDataMode,
 } from '@/lib/admin/leads';
 
 const statusOptions = [
@@ -65,7 +62,6 @@ export default function AdminLeadsPage() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [filteredLeads, setFilteredLeads] = useState<Lead[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [dataMode, setDataMode] = useState<LeadsDataMode>('supabase');
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
@@ -76,13 +72,8 @@ export default function AdminLeadsPage() {
 
   const fetchLeads = useEffectEvent(async () => {
     try {
-      const { leads: nextLeads, mode, errorMessage } = await loadLeads(supabase);
-      setDataMode(mode);
+      const { leads: nextLeads } = await loadLeads(supabase);
       setLeads(nextLeads);
-
-      if (mode === 'demo' && errorMessage) {
-        toast.info('Leads page is using demo data because live Supabase data is unavailable.');
-      }
     } catch {
       toast.error('Failed to load leads');
     } finally {
@@ -131,33 +122,52 @@ export default function AdminLeadsPage() {
 
   useEffect(() => {
     fetchLeads();
+
+    const channel = supabase
+      .channel('public:leads')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'leads' },
+        (payload) => {
+          const newLead = payload.new;
+          const formattedLead: Lead = {
+            id: newLead.id,
+            name: newLead.name || 'Unknown',
+            email: newLead.email,
+            phone: newLead.phone || '',
+            company: newLead.company || '',
+            service: newLead.service || '',
+            source: newLead.source || '',
+            message: newLead.message || '',
+            team_size: newLead.team_size || '',
+            country: newLead.country || '',
+            position: newLead.position || '',
+            type: newLead.type || 'contact',
+            status: newLead.status || 'new',
+            created_at: newLead.created_at || new Date().toISOString(),
+            updated_at: newLead.updated_at || new Date().toISOString()
+          };
+
+          setLeads((prev) => {
+            if (prev.some((lead) => lead.id === formattedLead.id)) return prev;
+            return [formattedLead, ...prev];
+          });
+          
+          toast.success(`New lead from ${formattedLead.name} — ${formattedLead.service || 'General'}`, {
+            duration: 3000
+          });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   useEffect(() => {
     filterAndSortLeads();
   }, [leads, searchQuery, statusFilter, typeFilter, sortField, sortDirection]);
-
-  useEffect(() => {
-    const handleStorage = (event: StorageEvent) => {
-      if (event.key === DEMO_STORAGE_KEY) {
-        fetchLeads();
-      }
-    };
-
-    const handleVisibility = () => {
-      if (document.visibilityState === 'visible') {
-        fetchLeads();
-      }
-    };
-
-    window.addEventListener('storage', handleStorage);
-    document.addEventListener('visibilitychange', handleVisibility);
-
-    return () => {
-      window.removeEventListener('storage', handleStorage);
-      document.removeEventListener('visibilitychange', handleVisibility);
-    };
-  }, []);
 
   const handleSort = (field: 'created_at' | 'name') => {
     if (sortField === field) {
@@ -170,17 +180,13 @@ export default function AdminLeadsPage() {
 
   const updateLeadStatus = async (id: string, status: Lead['status']) => {
     try {
-      const result = await saveLeadStatus(supabase, dataMode, id, status);
+      const result = await saveLeadStatus(supabase, id, status);
       if (!result.ok) {
         toast.error(result.error);
         return;
       }
       setLeads(leads.map((lead) => (lead.id === id ? { ...lead, status } : lead)));
-      toast.success(
-        dataMode === 'demo'
-          ? `Demo lead marked as ${status}`
-          : `Lead marked as ${status}`
-      );
+      toast.success(`Lead marked as ${status}`);
     } catch {
       toast.error('Failed to update lead');
     }
@@ -192,13 +198,13 @@ export default function AdminLeadsPage() {
     }
 
     try {
-      const result = await removeLead(supabase, dataMode, id);
+      const result = await removeLead(supabase, id);
       if (!result.ok) {
         toast.error(result.error);
         return;
       }
       setLeads(leads.filter((lead) => lead.id !== id));
-      toast.success(dataMode === 'demo' ? 'Demo lead deleted successfully' : 'Lead deleted successfully');
+      toast.success('Lead deleted successfully');
     } catch {
       toast.error('Failed to delete lead');
     }
@@ -281,18 +287,6 @@ export default function AdminLeadsPage() {
 
         {/* Content */}
         <div className="p-4 lg:p-8">
-          {dataMode === 'demo' && (
-            <div className="mb-6 flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-amber-900">
-              <DatabaseZap className="mt-0.5 h-5 w-5 flex-shrink-0" />
-              <div>
-                <p className="font-medium">Demo mode active</p>
-                <p className="text-sm text-amber-800">
-                  Live leads could not be loaded from Supabase, so local demo data is being shown.
-                </p>
-              </div>
-            </div>
-          )}
-
           {/* Filters */}
           <div className="flex flex-col lg:flex-row gap-4 mb-6">
             <div className="relative flex-1 max-w-md">

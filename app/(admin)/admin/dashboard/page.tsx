@@ -8,7 +8,6 @@ import {
   TrendingUp,
   Clock,
   ArrowRight,
-  DatabaseZap,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,17 +18,14 @@ import { toast } from 'sonner';
 import type { Lead } from '@/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
-  DEMO_STORAGE_KEY,
   getLeadDisplayName,
   getLeadInitials,
   loadLeads,
-  type LeadsDataMode,
 } from '@/lib/admin/leads';
 
 export default function AdminDashboardPage() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [dataMode, setDataMode] = useState<LeadsDataMode>('supabase');
   const [stats, setStats] = useState({
     total: 0,
     new: 0,
@@ -41,13 +37,8 @@ export default function AdminDashboardPage() {
 
   const fetchLeads = useEffectEvent(async () => {
     try {
-      const { leads: leadsData, mode, errorMessage } = await loadLeads(supabase);
-      setDataMode(mode);
+      const { leads: leadsData } = await loadLeads(supabase);
       setLeads(leadsData);
-
-      if (mode === 'demo' && errorMessage) {
-        toast.info('Dashboard is using demo leads because live Supabase data is unavailable.');
-      }
 
       // Calculate stats
       const now = new Date();
@@ -70,28 +61,6 @@ export default function AdminDashboardPage() {
 
   useEffect(() => {
     fetchLeads();
-  }, []);
-
-  useEffect(() => {
-    const handleStorage = (event: StorageEvent) => {
-      if (event.key === DEMO_STORAGE_KEY) {
-        fetchLeads();
-      }
-    };
-
-    const handleVisibility = () => {
-      if (document.visibilityState === 'visible') {
-        fetchLeads();
-      }
-    };
-
-    window.addEventListener('storage', handleStorage);
-    document.addEventListener('visibilitychange', handleVisibility);
-
-    return () => {
-      window.removeEventListener('storage', handleStorage);
-      document.removeEventListener('visibilitychange', handleVisibility);
-    };
   }, []);
 
   const getStatusColor = (status: string) => {
@@ -134,18 +103,6 @@ export default function AdminDashboardPage() {
 
         {/* Content */}
         <div className="p-4 lg:p-8">
-          {dataMode === 'demo' && (
-            <div className="mb-6 flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-amber-900">
-              <DatabaseZap className="mt-0.5 h-5 w-5 flex-shrink-0" />
-              <div>
-                <p className="font-medium">Demo mode active</p>
-                <p className="text-sm text-amber-800">
-                  Live leads could not be loaded from Supabase, so local demo data is being shown.
-                </p>
-              </div>
-            </div>
-          )}
-
           {/* Stats Grid */}
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <Card>

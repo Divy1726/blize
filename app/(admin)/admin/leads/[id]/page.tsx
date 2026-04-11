@@ -15,7 +15,6 @@ import {
   XCircle,
   Trash2,
   Send,
-  DatabaseZap,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -34,7 +33,6 @@ import {
   loadLeadById,
   removeLead,
   saveLeadStatus,
-  type LeadsDataMode,
 } from '@/lib/admin/leads';
 
 const statusOptions = [
@@ -50,23 +48,17 @@ export default function LeadDetailPage() {
   const [lead, setLead] = useState<Lead | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [note, setNote] = useState('');
-  const [dataMode, setDataMode] = useState<LeadsDataMode>('supabase');
   const supabase = createClient();
 
   const fetchLead = useEffectEvent(async () => {
     try {
-      const { lead: nextLead, mode, errorMessage } = await loadLeadById(supabase, String(params.id));
-      setDataMode(mode);
+      const { lead: nextLead } = await loadLeadById(supabase, String(params.id));
       setLead(nextLead);
 
       if (!nextLead) {
         toast.error('Lead not found');
         router.push('/admin/leads');
         return;
-      }
-
-      if (mode === 'demo' && errorMessage) {
-        toast.info('Lead detail is using demo data because live Supabase data is unavailable.');
       }
     } catch {
       toast.error('Failed to load lead details');
@@ -82,17 +74,13 @@ export default function LeadDetailPage() {
 
   const updateStatus = async (status: Lead['status']) => {
     try {
-      const result = await saveLeadStatus(supabase, dataMode, String(params.id), status);
+      const result = await saveLeadStatus(supabase, String(params.id), status);
       if (!result.ok) {
         toast.error(result.error);
         return;
       }
       setLead(lead ? { ...lead, status } : null);
-      toast.success(
-        dataMode === 'demo'
-          ? `Demo lead updated to ${status}`
-          : `Status updated to ${status}`
-      );
+      toast.success(`Status updated to ${status}`);
     } catch {
       toast.error('Failed to update status');
     }
@@ -104,13 +92,13 @@ export default function LeadDetailPage() {
     }
 
     try {
-      const result = await removeLead(supabase, dataMode, String(params.id));
+      const result = await removeLead(supabase, String(params.id));
       if (!result.ok) {
         toast.error(result.error);
         return;
       }
 
-      toast.success(dataMode === 'demo' ? 'Demo lead deleted successfully' : 'Lead deleted successfully');
+      toast.success('Lead deleted successfully');
       router.push('/admin/leads');
     } catch {
       toast.error('Failed to delete lead');
@@ -230,18 +218,6 @@ export default function LeadDetailPage() {
 
         {/* Content */}
         <div className="p-4 lg:p-8">
-          {dataMode === 'demo' && (
-            <div className="mb-6 flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-amber-900">
-              <DatabaseZap className="mt-0.5 h-5 w-5 flex-shrink-0" />
-              <div>
-                <p className="font-medium">Demo mode active</p>
-                <p className="text-sm text-amber-800">
-                  Live lead data could not be loaded from Supabase, so this record is coming from local demo data.
-                </p>
-              </div>
-            </div>
-          )}
-
           <div className="grid lg:grid-cols-3 gap-6">
             {/* Left Column - Lead Info */}
             <div className="lg:col-span-2 space-y-6">

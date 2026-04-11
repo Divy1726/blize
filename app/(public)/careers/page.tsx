@@ -106,11 +106,7 @@ export default function CareersPage() {
         return;
       }
 
-      toast.success(
-        result.mode === 'supabase'
-          ? 'Application submitted successfully! It is now visible in the admin dashboard.'
-          : 'Application saved locally! It is visible in the admin dashboard demo mode.'
-      );
+      toast.success('Application submitted successfully! It is now visible in the admin dashboard.');
       reset();
       setSelectedPosition('');
       setValue('position', '', { shouldValidate: false, shouldDirty: false });

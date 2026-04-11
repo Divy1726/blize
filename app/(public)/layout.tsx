@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Navbar } from "@/components/public/Navbar";
 import { Footer } from "@/components/public/Footer";
 import { COMPANY } from "@/lib/constants";
+import { FloatingButtons, FloatingWhatsApp } from "@/components/public/FloatingButtons";
 
 export const metadata: Metadata = {
   title: `${COMPANY.name} | ${COMPANY.tagline}`,
@@ -26,6 +27,8 @@ export default function PublicLayout({
         {children}
       </main>
       <Footer />
+      <FloatingWhatsApp />
+      <FloatingButtons />
     </div>
   );
 }
